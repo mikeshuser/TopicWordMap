@@ -1,0 +1,4 @@
+__pycache__
+aclImdb*
+/modelling/*trainables*.npy
+/modelling/*wv*.npy
