@@ -1,4 +1,5 @@
 __pycache__
+.directory
 aclImdb*
 /modelling/*trainables*.npy
 /modelling/*wv*.npy
