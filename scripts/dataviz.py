@@ -2,11 +2,11 @@
 """
 Visualize words and topics in a standalone data dashboard.
 Using the IMDB review data processed in previous steps, render a word map and 
-corresponding topic breakdown, filterable by review sentiment.
+corresponding topic summary, filterable by review sentiment.
 
 Dependencies:
     pandas == 0.23
-    bokeh == 2.2.3
+    bokeh == 2.3
 """
 
 __author__ = "Mike Shuser"
@@ -20,7 +20,7 @@ from bokeh.layouts import row, column, gridplot, Spacer
 from bokeh.models.widgets import Tabs, Panel, Div
 from bokeh.models import (
     ColumnDataSource, 
-    CDSView, 
+    CDSView,
     GroupFilter,
     HoverTool, 
     Panel, 
@@ -37,7 +37,7 @@ CLUSTER_DATA = f"{DATA_DIR}/cluster_map_n6_t100.csv"
 LEGEND_LAYOUT = f"{DATA_DIR}/legend_layout.csv"
 POS_STATS = f"{DATA_DIR}/positive_text_vocab_stats.csv"
 NEG_STATS = f"{DATA_DIR}/negative_text_vocab_stats.csv"
-PLOT_HEIGHT = 596
+PLOT_HEIGHT = 593
 PLOT_WIDTH = 1400
 
 def build_map_cds(
@@ -124,7 +124,7 @@ def prep_bar_df(clusters: pd.DataFrame, sentiment: str):
 def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
 
     """
-    main func to build the map tab. 
+    main func to build the map tab
     """
 
     source = cds
@@ -154,7 +154,7 @@ def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
         -Each cluster covers a different topic<br>
         -Some clusters can be further divided into subtopics, visible when 
         hovering over a marker<br>
-        -Markers are sized by frequency (log-scale)<br>
+        -Markers are sized by mention frequency (log-scale)<br>
         </p>
         </section>
     """) 
@@ -224,7 +224,7 @@ def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
     
     legend = Legend(items=legend_items, location=(0,0))
     legend.click_policy = "mute"
-    legend.title = "topics"
+    legend.title = "Topics"
     legend.title_text_font = "arial"
     legend.title_text_font_size = "11pt"
     legend.title_text_font_style = "bold"
@@ -250,7 +250,7 @@ def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
     radio_buttons = RadioButtonGroup(
         labels=['Positive', 'Negative'], 
         active=0,
-        width_policy="min"
+        width_policy="min",
     )
     callback = CustomJS(
         args=dict(
@@ -267,7 +267,7 @@ def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
             source.change.emit();
         """
     )
-    radio_buttons.js_on_click(callback)   
+    radio_buttons.js_on_click(callback)
 
     layout = column(
         header,
@@ -278,11 +278,10 @@ def make_map(cds: ColumnDataSource, legend_layout: pd.Series):
     )
     return layout
     
-
 def make_hbar(df: pd.DataFrame):
 
     """
-    main func to build the map tab. 
+    main func to build the topic summary tab. 
     """
 
     #-------title and description-----------------------------------------------
@@ -343,6 +342,7 @@ def make_hbar(df: pd.DataFrame):
 
         grid_colour = '#adafb3'
         fig.outline_line_color = None
+
         fig.xaxis.axis_line_color = grid_colour
         fig.xaxis.major_tick_line_color = grid_colour
         fig.xaxis.major_label_text_font = "arial"
